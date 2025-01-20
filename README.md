@@ -13,10 +13,8 @@ This project implements a web-based SQL Query Generator and Result Viewer using 
 
 To run this app, the following dependencies installed:
 
-- **Python** (version 3.7 or higher)
+- **Python**
 - **Streamlit**
-- **Google Gemini API** (via the google-generativeai package)
-- **SQLite3** (for database interaction)
-- **Dotenv** (for loading environment variables like the API key)
-- **Pandas** (for displaying results in tabular format)
-
+- **Google Gemini API** 
+- **SQLite3** 
+- **Dotenv** 
