@@ -6,8 +6,10 @@ import pandas as pd
 import google.generativeai as genai
 from sql import create_table, insert_record, retrieve_data_from_table, delete_record, delete_table
 
+# Load environment variables
 load_dotenv()
 
+# Google API key setup (Ensure it's in the environment variables)
 api_key = os.getenv("GOOGLE_API_KEY")
 if api_key:
     genai.configure(api_key=api_key)
@@ -23,35 +25,40 @@ def get_gemini_response(prompt):
         st.error(f"Error fetching response from Gemini: {e}")
         return None
 
+# Streamlit configuration should be the first Streamlit command
 st.set_page_config(page_title="SQL Query Generator and Manager", page_icon=":guardsman:", layout="wide")
+
+# Title of the app
 st.title("SQL Query Generator and Manager")
 
+# Styling buttons
+create_button_style = """
+    <style>
+    .stButton>button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px;
+    }
+    .stButton>button:hover {
+        background-color: #45a049;
+    }
+    </style>
+"""
+st.markdown(create_button_style, unsafe_allow_html=True)
+
+# Create new table section
 with st.expander("Create New Table"):
     table_name = st.text_input("Table Name")
     columns_input = st.text_area("Columns (e.g., Name TEXT, Age INT, Marks INT)")
 
-    create_button_style = """
-        <style>
-        .stButton>button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 8px;
-        }
-        .stButton>button:hover {
-            background-color: #45a049;
-        }
-        </style>
-    """
-    st.markdown(create_button_style, unsafe_allow_html=True)
-    
     if st.button("Create Table", key="create_table_button"):
         if not table_name or not columns_input:
             st.error("Please provide both table name and column definitions.")
@@ -63,6 +70,7 @@ with st.expander("Create New Table"):
             except Exception as e:
                 st.error(f"Error creating table: {e}")
 
+# Manage existing tables section
 with st.expander("Manage Existing Tables"):
     tables = sqlite3.connect("student.db").execute("SELECT name FROM sqlite_master WHERE type='table';").fetchall()
     table_names = [table[0] for table in tables]
